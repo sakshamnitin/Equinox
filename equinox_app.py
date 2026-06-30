@@ -465,17 +465,18 @@ RETURN EXACTLY:
                 st.stop()
 
             with st.spinner(f"Fetching live data for {ticker}..."):
-    info, hist, stock = None, None, None
-    for attempt in range(3):
-        try:
-            stock = yf.Ticker(ticker)
-            info  = stock.info
-            hist  = stock.history(period="1y")
-            if info and "shortName" in info:
-                break
-        except Exception:
-            pass
-        time.sleep(2 ** attempt)  # 1s, 2s, 4s
+                info, hist, stock = None, None, None
+                for attempt in range(3):
+                    try:
+                        stock = yf.Ticker(ticker)
+                        info  = stock.info
+                        hist  = stock.history(period="1y")
+                        if info and "shortName" in info:
+                            break
+                 except Exception:
+                      pass
+                
+                 time.sleep(2 ** attempt)  # 1s, 2s, 4s
 
     if not info or "shortName" not in info:
         st.error(f"Yahoo Finance is rate-limiting right now. Wait 30 seconds and try again.")
