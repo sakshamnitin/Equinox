@@ -474,8 +474,7 @@ RETURN EXACTLY:
                         if info and "shortName" in info:
                             break
                  except Exception:
-                      pass
-                
+                pass
                  time.sleep(2 ** attempt)  # 1s, 2s, 4s
 
     if not info or "shortName" not in info:
