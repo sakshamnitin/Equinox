@@ -465,26 +465,18 @@ RETURN EXACTLY:
                 st.stop()
 
             with st.spinner(f"Fetching live data for {ticker}..."):
-                info, hist, stock = None, None, None
-                for attempt in range(3):
-                    try:
-                        stock = yf.Ticker(ticker)
-                        info  = stock.info
-                        hist  = stock.history(period="1y")
-                        if info and "shortName" in info:
-                            break
-                 except Exception:
-                pass
-                 time.sleep(2 ** attempt)  # 1s, 2s, 4s
-
-    if not info or "shortName" not in info:
-        st.error(f"Yahoo Finance is rate-limiting right now. Wait 30 seconds and try again.")
-        st.stop()
-    try:
-        financials = compute_financials(stock, info, hist)
-    except Exception as e:
-        st.error(f"Data processing failed: {e}")
-        st.stop()
+                try:
+                    time.sleep(0.5)
+                    stock = yf.Ticker(ticker)
+                    info  = stock.info
+                    hist  = stock.history(period="1y")
+                    if not info or "shortName" not in info:
+                        st.error(f"No data for `{ticker}`. Check symbol.")
+                        st.stop()
+                    financials = compute_financials(stock, info, hist)
+                except Exception as e:
+                    st.error(f"Data fetch failed: {e}")
+                    st.stop()
 
             with st.spinner("Running AI valuation analysis..."):
                 try:
