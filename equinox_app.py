@@ -372,7 +372,7 @@ st.markdown(f"""
 api_key = st.secrets.get("ANTHROPIC_API_KEY", "")
 
 # ── TABS ──────────────────────────────────────────────────────────────────────
-tab1, tab2 = st.tabs(["📊  Equity Research", "📐  Portfolio Optimiser"])
+tab1, tab2, tab3 = st.tabs(["📊  Equity Research", "📐  Portfolio Optimiser", "📉  VaR Calculator"])
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TAB 1 — EQUITY RESEARCH
@@ -639,3 +639,10 @@ RETURN EXACTLY:
 with tab2:
     from portfolio_optimiser import show_optimiser
     show_optimiser()
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAB 3 — VAR CALCULATOR
+# ══════════════════════════════════════════════════════════════════════════════
+with tab3:
+    from var_calculator import show_var_calculator
+    show_var_calculator()
