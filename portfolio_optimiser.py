@@ -298,14 +298,23 @@ def show_optimiser():
         try:
             raw = yf.download(tickers, start=str(start_date), end=str(end_date),
                               auto_adjust=True, progress=False)
+
             if isinstance(raw.columns, pd.MultiIndex):
-                prices = raw['Close'][tickers].dropna()
+                close = raw['Close']
             else:
-                prices = raw[['Close']].dropna()
-                prices.columns = tickers
+                close = raw[['Close']]
+                close.columns = tickers
+
+            missing = [t for t in tickers if t not in close.columns or close[t].isna().all()]
+            if missing:
+                st.error(f"No data returned for: {', '.join(missing)}. "
+                          f"Check these tickers are correct on Yahoo Finance.")
+                return
+
+            prices = close[tickers].dropna()
 
             if prices.empty:
-                st.error("No data returned. Check your tickers.")
+                st.error("Tickers are valid but do not share overlapping dates.")
                 return
 
             log_returns = np.log(prices / prices.shift(1)).dropna()
